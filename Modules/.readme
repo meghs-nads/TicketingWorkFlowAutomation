@@ -1,0 +1,36 @@
+# Modules Overview
+
+This folder contains various modules used for different tasks in the project. Below is a summary of the key modules and their functionalities:
+
+### 1. **emailConfiguration**
+This module is used for setting up the email system when utilizing SMTP for sending emails. It contains the necessary configuration to send emails through an SMTP server.
+
+### 2. **newProblemSelect**
+This module is designed to identify the last filled row in a dataset and select the next unfilled row. It is helpful for ensuring that new data is added to the next available row without overwriting existing entries.
+
+### 3. **ActiveFilterSelect**
+This module checks for active filters applied to a range in an Excel worksheet. It loops through all columns and identifies which ones have active filters, returning a string listing the column names with filters applied. If no filters are active, it returns "NO ACTIVE FILTERS."
+
+**Note:** This module is currently not in use but can be referenced if needed for handling active filter states in a dataset.
+
+### 4. **AutoClose**
+This module handles the automation of closing the workbook after a specified period of inactivity. It sets a timer for 25 minutes, after which the workbook is automatically saved and closed. The `StopTimer` subroutine can be used to cancel the automatic shutdown.
+
+**Note:** This module is not in use but can be helpful for automating workbook closure after a set period.
+
+### 5. **Email notif check**
+This module checks if certain conditions are met for sending an email notification. It scans a specific range of cells in a worksheet and, if the conditions are met (e.g., email not sent, required fields filled, etc.), it sends an email with relevant details to a predefined recipient. The email includes information such as problem IDs, code/configuration changes, and system details.
+
+**Note:** The module is useful for sending automated notifications based on conditions in a worksheet but is currently not in use.
+
+### 6. **Pivottable filter reset**
+This module resets the filters applied to a specific PivotTable (e.g., "PivotTable2") in a worksheet. It clears all filters and then ensures specific items are excluded from the "Status" field in the PivotTable, such as "Completed," "Cancelled," and "Opportunity."
+
+**Note:** This module is currently not in use but can be referenced for resetting PivotTable filters as required.
+
+### 7. **Sort Problems Data**
+This module sorts data in the "Problems" worksheet based on multiple columns. It first clears any existing sort fields and then sorts the data by columns B, E, and F in descending or ascending order, as specified. It ensures that the sorted range includes all relevant rows and maintains the header.
+
+**Note:** This module is not currently in use but can be referenced for sorting problem data in the future.
+
+---

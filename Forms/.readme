@@ -1,0 +1,206 @@
+
+## Overview
+
+The `forms` folder contains essential forms used for ticket management and email functionalities. The folder includes:
+
+1. **`tktinput`**: A form for creating a new ticket and sending it via Outlook.
+2. **`frmEmailSummary`**: An alternative to the Outlook email functionality, using SMTP for email sending when the Outlook Object Library is unavailable.
+
+---
+
+## Form 1: `tktinput`
+
+The `tktinput` form allows users to create new tickets and send them via Outlook. The form appears when the ticket status is set to "In Progress" in the worksheet. If the status is "Completed" or "Cancelled," the form does not pop up.
+
+### Form Fields
+
+1. **Subject**
+   - This field is automatically populated with the email subject when the user clicks "Generate Email." The subject will appear in the subject line of the Outlook email.
+
+2. **Issue Description**
+   - A detailed description of the ticket’s issue.
+
+3. **Issue Start Date**
+   - Used to calculate the age of the ticket in weeks.
+
+4. **Assigned MSO Emails**
+   - MSO (Managed Service Operator) email addresses are pulled from another worksheet and can be added to the "To" or "CC" fields of the email.
+
+5. **Assigned CSO Emails**
+   - CSO (Customer Support Operator) email addresses are also pulled from a separate worksheet and can be included in the "To" or "CC" fields.
+
+6. **Other Fields**
+   - Additional fields such as priority, ticket type, and department can be added depending on the requirements.
+
+---
+### `tktinput` Form:
+
+![Ticket Input Form](images/tktinput_form.png)
+
+
+### Functionalities
+
+1. **Email Generation via Outlook**
+   - After entering ticket details and selecting the necessary email addresses, clicking the "Generate Email" button triggers the form submission:
+     - Ticket details are added to the worksheet.
+     - Outlook automatically opens with the subject, body, CC, and BCC fields pre-filled.
+     - The user only needs to click "Send" in Outlook to send the email.
+
+2. **Integration with Worksheet**
+   - The form writes the ticket details to the worksheet automatically when submitted.
+
+3. **Automatic Outlook Pop-up**
+   - When the user clicks the "Generate Email" button, Outlook opens with:
+     - **Subject**: The ticket’s subject.
+     - **CC**: MSO or CSO emails pulled from the worksheet.
+     - **BCC**: Additional addresses, if applicable.
+     - **Body**: Contains the ticket’s issue description and start date.
+
+---
+
+### Outlook Integration 🚀
+
+#### Prerequisite: Microsoft Outlook Object Library 16.0
+
+To enable Outlook email functionality, you must have the **Microsoft Outlook Object Library 16.0** enabled in Excel. This is only possible with a licensed version of Microsoft Office.
+
+#### Issue with Outlook Integration:
+- If you don’t have a licensed Office version, the Outlook integration may not work.
+
+---
+
+### How to Enable Microsoft Outlook Object Library 16.0 📧
+
+Follow these steps to enable the Microsoft Outlook Object Library in Excel:
+
+1. **Open Excel**.
+2. **Press `Alt + F11`** to open the **VBA Editor**.
+3. **Click on `Tools` in the top menu** and select **References**.
+4. In the **References dialog box**, scroll down and check **Microsoft Outlook 16.0 Object Library**.
+5. Click **OK** to save your changes.
+
+After this, you can use Outlook’s email functionalities in your form.
+
+---
+
+### How to Create the `tktinput` Form 🛠️
+
+#### Steps to Create the Form:
+
+1. Open the **VBA editor** in Excel (Press `Alt + F11`).
+2. Insert a **UserForm** (Right-click in the "VBA Project" pane > Insert > UserForm).
+3. Add the following fields to the form:
+   - **Subject** (TextBox)
+   - **Issue Description** (TextBox)
+   - **Issue Start Date** (DatePicker or TextBox)
+   - **Assigned MSO Emails** (ComboBox or ListBox)
+   - **Assigned CSO Emails** (ComboBox or ListBox)
+4. Add a **CommandButton** for "Generate Email."
+5. Write the code to embed form details into the worksheet and trigger Outlook pop-up.
+   
+   Example VBA Code Snippet:
+   ```vba
+   Sub GenerateEmail()
+       Dim OutlookApp As Object
+       Dim OutlookMail As Object
+       
+       ' Check if Outlook is running
+       On Error Resume Next
+       Set OutlookApp = CreateObject("Outlook.Application")
+       On Error GoTo 0
+
+       If Not OutlookApp Is Nothing Then
+           Set OutlookMail = OutlookApp.CreateItem(0) ' Create new email
+           With OutlookMail
+               .Subject = Me.Subject.Value ' Ticket Subject
+               .Body = "Issue Description: " & Me.IssueDescription.Value & vbCrLf & _
+                       "Issue Start Date: " & Me.IssueStartDate.Value
+               .To = Me.MSOEmails.Value ' Pull MSO Emails
+               .CC = Me.CSOEmails.Value ' Pull CSO Emails
+               .Display ' Display email for user to review
+           End With
+       Else
+           MsgBox "Outlook is not running.", vbExclamation
+       End If
+   End Sub
+
+
+## Form 2: `frmEmailSummary` - SMTP Alternative
+
+The `frmEmailSummary` form provides an alternative method for sending emails using SMTP, which can be used when the **Microsoft Outlook Object Library** is not available due to compatibility issues or licensing constraints.
+
+### SMTP Email Sending Setup 📧
+
+When the Outlook integration is unavailable, you can use SMTP (Simple Mail Transfer Protocol) to send emails. Follow the steps below to configure and use SMTP for sending emails.
+
+---
+
+### `frmEmailSummary` Form:
+
+![Email Summary Form](images/frmemail_summary.png)
+
+### 1. **SMTP Configuration Setup**
+
+To send emails via SMTP, you'll need to configure your system with the necessary SMTP server details. Depending on your email provider, the configuration will vary. Here are the SMTP settings for a few common email services:
+
+#### For Gmail:
+- **SMTP Server**: `smtp.gmail.com`
+- **Port**: 587 (TLS) or 465 (SSL)
+- **Username**: Your Gmail address (e.g., `yourname@gmail.com`)
+- **Password**: Your Gmail password or **app password** (if two-factor authentication is enabled).
+
+#### For Outlook:
+- **SMTP Server**: `smtp.office365.com`
+- **Port**: 587 (TLS)
+- **Username**: Your Outlook email address
+- **Password**: Your Outlook password
+
+#### Useful Links:
+- **Gmail SMTP settings**: [Google SMTP settings](https://support.google.com/mail/answer/7126229)
+- **Outlook SMTP settings**: [Outlook SMTP settings](https://support.microsoft.com/en-us/office/pop-and-imap-email-settings-for-microsoft-365-and-office-365-6c60d0f3-e3b9-4d4b-bb6b-df09e9e5eb6e)
+
+---
+
+### 2. **Setting up SMTP in the VBA Code**
+
+To enable SMTP email sending in the form, you will need to configure the necessary code in the `cmd_SaveAndSendEmail_Click()` procedure.
+
+- **Uncomment the necessary lines** in the `cmd_SaveAndSendEmail_Click()` procedure to enable SMTP email functionality.
+  
+- **Configure the email credentials** in the `emailConfiguration` module located in the **Modules** folder. This includes setting up your email address and SMTP password.
+
+Example of SMTP configuration in the VBA code:
+
+```vba
+Sub SendEmailViaSMTP()
+    Dim CDOConfig As Object
+    Dim CDOMessage As Object
+    Dim SMTPServer As String
+    Dim SMTPPort As Integer
+
+    ' Set SMTP server and port (for example, Gmail)
+    SMTPServer = "smtp.gmail.com"
+    SMTPPort = 587
+
+    ' Create the email message
+    Set CDOMessage = CreateObject("CDO.Message")
+    Set CDOConfig = CreateObject("CDO.Configuration")
+    CDOConfig.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpusessl") = True
+    CDOConfig.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserver") = SMTPServer
+    CDOConfig.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpserverport") = SMTPPort
+    CDOConfig.Fields.Item("http://schemas.microsoft.com/cdo/configuration/smtpauthenticate") = 1
+    CDOConfig.Fields.Item("http://schemas.microsoft.com/cdo/configuration/sendusername") = "yourname@gmail.com"
+    CDOConfig.Fields.Item("http://schemas.microsoft.com/cdo/configuration/sendpassword") = "yourpassword"
+    CDOConfig.Fields.Update
+
+    ' Configure and send the email
+    With CDOMessage
+        .To = Me.MSOEmails.Value ' Recipient Email
+        .From = "yourname@gmail.com"
+        .Subject = Me.Subject.Value
+        .TextBody = "Issue Description: " & Me.IssueDescription.Value & vbCrLf & _
+                    "Issue Start Date: " & Me.IssueStartDate.Value
+        .Send
+    End With
+    MsgBox "Email sent successfully via SMTP!"
+End Sub

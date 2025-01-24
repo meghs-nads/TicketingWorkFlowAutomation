@@ -1,0 +1,60 @@
+# Classes Folder
+
+This is the **Classes** folder of the **Ticketing Workflow Automation** project. This folder contains VBA class files that handle **ticket tracking and workflow automation**. These classes are modular and can be easily integrated into other projects.
+
+---
+
+## Overview of Classes
+
+### `Problems.cls`
+
+#### **Purpose**
+This class is responsible for managing the main ticketing workflow. It includes:
+- **Ticket Age Calculation**: Calculates the age of tickets in weeks based on their creation date.
+- **Dynamic Forms**: Loads a form for filling ticket details if the status is set to anything other than "Completed" or "Cancelled."
+- **Status Dropdown**: Uses a dropdown for ticket statuses like "In Progress," "Completed," and "Cancelled."
+
+#### **How It Works**
+- Automatically calculates ticket age when the issue start date is updated.
+- Opens the ticket details form dynamically when required.
+- Ensures invalid dates do not affect the calculations.
+
+---
+
+### `NON PRB - Dematic Open Cases.cls`
+
+#### **Purpose**
+This class handles workflows in the "Non PRB - Dematic Open Cases" worksheet. It ensures the data and pivot tables are kept updated.
+
+#### **How It Works**
+- Refreshes pivot tables whenever the sheet is activated or modified.
+- Protects the worksheet to ensure data integrity.
+
+---
+
+### `PRB Overview.cls`
+
+#### **Purpose**
+This class manages updates in the "PRB - Overview" worksheet. It keeps summary data up-to-date for easy reference.
+
+#### **How It Works**
+- Automatically refreshes pivot tables on activation or when selections change.
+- Ensures real-time visibility of summary data for better decision-making.
+
+---
+
+## How to Integrate These Classes
+
+1. **Import the Classes**:
+   - Open the VBA editor (ALT + F11).
+   - Go to `File > Import File` and add the `.cls` files.
+
+2. **Check Worksheet Names**:
+   - Ensure your worksheet names match those used in the classes (e.g., "Problems," "PRB - Overview").
+
+3. **Customize**:
+   - Adjust dropdown values, form triggers, or pivot table settings to suit your project.
+
+---
+
+By using these classes, you can streamline ticket management and automate workflows in Excel.

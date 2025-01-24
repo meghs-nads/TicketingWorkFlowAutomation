@@ -146,10 +146,12 @@ Private Sub cmd_SaveAndSendEmail_Click()
         
         emailConfiguration.InitializeSMTPConfig
         
+        'Uncomment the following 3 lines for sending emails via SMTP
         'fromaddrvar = setFromEmailAddress(cmb_AsgndTo.Value)
         'Load the Email form
         'frmEmailSummary.Show
         
+        'Uncomment the below line and Comment 'my_email' to send emails via SMTP
         'my_email
         openEmail
         Unload frmTktInput
